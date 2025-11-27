@@ -1,0 +1,113 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/dudagoisclaret08/-Exerc-cio-1-Gr-fico-de-Temperaturas-Mensais/blob/main/Damos_lhe_as_boas_vindas_ao_Colab.ipynb.madu%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import os, io, textwrap\n",
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "from sklearn import set_config\n",
+        "from sklearn.tree import DecisionTreeClassifier, export_text\n",
+        "from sklearn.impute import SimpleImputer\n",
+        "from sklearn.preprocessing import OneHotEncoder\n",
+        "from sklearn.compose import ColumnTransformer\n",
+        "from sklearn.pipeline import Pipeline\n",
+        "\n",
+        "# 1) Garantir saída pandas nos transformadores\n",
+        "set_config(transform_output=\"pandas\")\n",
+        "\n",
+        "# 2) RECONSTRUIR o preprocess com OneHotEncoder denso (evita erro de sparse no pandas)\n",
+        "numeric_features = ['Age','SibSp','Parch','Fare']\n",
+        "numeric_transformer = Pipeline(steps=[('imputer', SimpleImputer(strategy='median'))])\n",
+        "\n",
+        "categorical_features = ['Pclass','Sex','Embarked']\n",
+        "categorical_transformer = Pipeline(steps=[\n",
+        "    ('imputer', SimpleImputer(strategy='most_frequent')),\n",
+        "    # Em scikit-learn >= 1.2 use sparse_output=False; em versões antigas use sparse=False\n",
+        "    ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))\n",
+        "])\n",
+        "\n",
+        "preprocess_pandas = ColumnTransformer(\n",
+        "    transformers=[\n",
+        "        ('num', numeric_transformer, numeric_features),\n",
+        "        ('cat', categorical_transformer, categorical_features)\n",
+        "    ]\n",
+        ")\n",
+        "\n",
+        "# 3) Transformar X_train em DataFrame já expandido\n",
+        "prep_df = preprocess_pandas.fit_transform(X_train)\n",
+        "\n",
+        "# 4) Treinar uma árvore diretamente no espaço transformado para poder imprimir/exportar\n",
+        "tree_for_plot = DecisionTreeClassifier(max_depth=3, random_state=42)\n",
+        "tree_for_plot.fit(prep_df, y_train)\n",
+        "\n",
+        "feature_names = list(prep_df.columns)\n",
+        "print(export_text(tree_for_plot, feature_names=feature_names))\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "RuKXwm1Vvs5Q",
+        "outputId": "df8be045-5fe0-4320-aca5-bc7f92498a63"
+      },
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "|--- cat__Sex_female <= 0.50\n",
+            "|   |--- num__Age <= 3.50\n",
+            "|   |   |--- num__SibSp <= 2.50\n",
+            "|   |   |   |--- class: 1\n",
+            "|   |   |--- num__SibSp >  2.50\n",
+            "|   |   |   |--- class: 0\n",
+            "|   |--- num__Age >  3.50\n",
+            "|   |   |--- num__Fare <= 522.08\n",
+            "|   |   |   |--- class: 0\n",
+            "|   |   |--- num__Fare >  522.08\n",
+            "|   |   |   |--- class: 1\n",
+            "|--- cat__Sex_female >  0.50\n",
+            "|   |--- cat__Pclass_3 <= 0.50\n",
+            "|   |   |--- num__Age <= 24.50\n",
+            "|   |   |   |--- class: 1\n",
+            "|   |   |--- num__Age >  24.50\n",
+            "|   |   |   |--- class: 1\n",
+            "|   |--- cat__Pclass_3 >  0.50\n",
+            "|   |   |--- num__Fare <= 7.89\n",
+            "|   |   |   |--- class: 1\n",
+            "|   |   |--- num__Fare >  7.89\n",
+            "|   |   |   |--- class: 0\n",
+            "\n"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "name": "Damos-lhe as boas-vindas ao Colab",
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
