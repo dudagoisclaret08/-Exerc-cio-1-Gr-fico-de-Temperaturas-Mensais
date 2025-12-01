@@ -1,0 +1,124 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/dudagoisclaret08/-Exerc-cio-1-Gr-fico-de-Temperaturas-Mensais/blob/main/revis%C3%A3o%20pd%201\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "dados = {\n",
+        "    \"Nome\": [\"Ana\", \"Bianca\", \"Carlos\", \"Duda\"],\n",
+        "    \"Idade\": [17, 19, 22, 17],\n",
+        "    \"Cidade\": [\"Recife\", \"SP\", \"RJ\", \"PE\"]\n",
+        "}\n",
+        "\n",
+        "df = pd.DataFrame(dados)\n",
+        "# df.head(2) ####colocar a quantidade\n",
+        "# df.tail(1)\n",
+        "# df.info()\n",
+        "# df.describe()\n",
+        "# df['Cidade']\n",
+        "# df[['Idade','Nome']]\n",
+        "# df.loc[0]\n",
+        "# df.iloc[3]\n",
+        "# df[df['Idade']>18]  ### maior\n",
+        "# df.sort_values('Cidade')\n",
+        "df.groupby('Cidade')['Idade'].mean()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 241
+        },
+        "id": "Bep9ALNm31TX",
+        "outputId": "7550c6ca-dde2-41c3-e1b6-264c23be1312"
+      },
+      "execution_count": 82,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "Cidade\n",
+              "PE        17.0\n",
+              "RJ        22.0\n",
+              "Recife    17.0\n",
+              "SP        19.0\n",
+              "Name: Idade, dtype: float64"
+            ],
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>Idade</th>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>Cidade</th>\n",
+              "      <th></th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>PE</th>\n",
+              "      <td>17.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>RJ</th>\n",
+              "      <td>22.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>Recife</th>\n",
+              "      <td>17.0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>SP</th>\n",
+              "      <td>19.0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div><br><label><b>dtype:</b> float64</label>"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 82
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "name": "Damos-lhe as boas-vindas ao Colab",
+      "provenance": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 0
+}
